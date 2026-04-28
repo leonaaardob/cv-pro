@@ -1,4 +1,12 @@
+"use client";
+import { useEffect } from "react";
+import { usePostHog } from "posthog-js/react";
+
 export default function SuccesPage() {
+  const posthog = usePostHog();
+  useEffect(() => {
+    posthog?.capture("purchase_completed", { amount: 12, currency: "eur", service: "cv_rewrite" });
+  }, [posthog]);
   return (
     <main className="min-h-screen bg-[#0D0D0D] text-white flex items-center justify-center px-6 py-20 font-[family-name:var(--font-geist)]">
       <div className="max-w-lg w-full text-center">

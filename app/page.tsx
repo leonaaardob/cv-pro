@@ -1,9 +1,20 @@
 import Link from "next/link";
 import { CTAButton } from "@/components/CTAButton";
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "CV Pro — Réécriture de CV par IA",
+  description: "Réécriture de CV par intelligence artificielle. Livré en 30 minutes pour 12€.",
+  provider: { "@type": "Organization", name: "LB FRAME", url: "https://lbframe.com" },
+  offers: { "@type": "Offer", price: "12.00", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
+  url: "https://cvpro.lbframe.com",
+};
+
 export default function Home() {
   return (
     <main className="font-[family-name:var(--font-geist)]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {/* HERO */}
       <section className="bg-[#0D0D0D] text-white px-6 py-24 sm:py-32">
         <div className="max-w-3xl mx-auto">
