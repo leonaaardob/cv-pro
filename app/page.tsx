@@ -36,15 +36,15 @@ export default function Home() {
             {[
               {
                 icon: "✅",
-                text: "Vous passez enfin les filtres automatiques — plus de candidatures envoyées dans le vide",
+                text: "Les recruteurs lisent enfin votre CV jusqu'au bout — au lieu de l'ignorer après 6 secondes",
               },
               {
                 icon: "✅",
-                text: "Vos vraies compétences ressortent — fini le CV fadasse qui noie ce qui vous rend unique",
+                text: "Vous recevez enfin des réponses — fini le silence radio après vos candidatures",
               },
               {
                 icon: "✅",
-                text: "Vous recevez un résultat prêt à envoyer — pas de va-et-vient, pas de prise de tête",
+                text: "Votre CV vous est renvoyé en 30 minutes — prêt à envoyer, rien à faire de votre côté",
               },
             ].map((item, i) => (
               <li key={i} className="flex gap-4 items-start text-lg">
@@ -131,10 +131,10 @@ export default function Home() {
           <div className="text-5xl font-bold mb-2">12€</div>
           <p className="text-zinc-400 mb-2">Paiement unique · Aucun abonnement</p>
           <ul className="text-zinc-300 text-sm space-y-1 mb-8">
-            <li>CV complet réécrit</li>
-            <li>Format ATS (passé les filtres automatiques)</li>
+            <li>Votre CV entier réécrit, pas juste corrigé</li>
+            <li>Les recruteurs voient vos vrais résultats, pas vos tâches</li>
             <li>Livraison par email en 30 min</li>
-            <li>Retravaillé si vous n'êtes pas satisfait</li>
+            <li>Pas satisfait ? On recommence, sans frais</li>
           </ul>
           <CTAButton />
         </div>
