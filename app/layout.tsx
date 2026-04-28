@@ -34,7 +34,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" className={geist.variable}>
-      <body className="min-h-screen bg-[#F7F7F4] text-[#0D0D0D] antialiased">
+      <body className="antialiased">
         <PostHogProvider>{children}</PostHogProvider>
       </body>
     </html>
