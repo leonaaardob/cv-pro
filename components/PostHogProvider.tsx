@@ -12,6 +12,8 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
         capture_pageview: true,
         capture_pageleave: true,
       });
+      // Tag all events so cv-pro is filterable in a shared PostHog project
+      posthog.register({ app: "cv-pro" });
     }
   }, []);
 
