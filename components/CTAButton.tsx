@@ -16,8 +16,8 @@ export function CTAButton({ dark }: { dark?: boolean }) {
       onClick={handleClick}
       className={
         dark
-          ? "inline-block bg-zinc-900 text-white font-semibold text-lg px-8 py-4 rounded-full hover:bg-zinc-800 transition-colors"
-          : "inline-block bg-amber-400 text-zinc-900 font-semibold text-lg px-8 py-4 rounded-full hover:bg-amber-300 transition-colors"
+          ? "inline-block bg-[#0D0D0D] text-white font-semibold text-lg px-8 py-4 rounded-full hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.97] transition-all duration-200"
+          : "inline-block bg-[#1A3CFF] text-white font-semibold text-lg px-8 py-4 rounded-full hover:bg-[#0D30CC] hover:scale-[1.02] active:scale-[0.97] transition-all duration-200"
       }
     >
       Refaire mon CV maintenant →
