@@ -38,13 +38,8 @@ export default function MentionsLegales() {
 
           <div>
             <h2 className="text-base font-bold uppercase tracking-[0.18em] text-zinc-900">Hébergement</h2>
-            <p className="mt-3 leading-relaxed text-zinc-600">VPS auto-hébergé via Coolify.</p>
-          </div>
-
-          <div>
-            <h2 className="text-base font-bold uppercase tracking-[0.18em] text-zinc-900">Propriété intellectuelle</h2>
             <p className="mt-3 leading-relaxed text-zinc-600">
-              Les CV produits sont cédés intégralement au client dès paiement.
+              Hetzner Online GmbH (Gunzenhausen, Allemagne) et Contabo GmbH (Munich, Allemagne).
             </p>
           </div>
 

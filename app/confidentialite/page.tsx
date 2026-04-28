@@ -48,7 +48,7 @@ export default function Confidentialite() {
               Hébergement
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-zinc-600">
-              Infrastructure VPS auto-hébergée via Coolify.
+              Hetzner Online GmbH (Allemagne, UE) et Contabo GmbH (Allemagne, UE) — données hébergées en Europe.
             </p>
           </div>
           <div>
