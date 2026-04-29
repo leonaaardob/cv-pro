@@ -1,17 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirect = searchParams.get('redirect') ?? '/dashboard'
+  const raw = searchParams.get('redirect') ?? '/dashboard'
+  const redirect = raw.startsWith('/') && !raw.startsWith('//') ? raw : '/dashboard'
 
   async function handleMagicLink(e: React.FormEvent) {
     e.preventDefault()
@@ -27,7 +28,9 @@ export default function LoginPage() {
   }
 
   async function handleGoogle() {
-    await authClient.signIn.social({ provider: 'google', callbackURL: redirect })
+    setError('')
+    const { error } = await authClient.signIn.social({ provider: 'google', callbackURL: redirect })
+    if (error) setError(error.message ?? 'Une erreur est survenue.')
   }
 
   if (sent) {
@@ -50,9 +53,12 @@ export default function LoginPage() {
         <p className="mt-2 text-zinc-500">Accède à ton espace CV Pro</p>
 
         <form onSubmit={handleMagicLink} className="mt-8 space-y-4">
+          <label htmlFor="email" className="sr-only">Adresse email</label>
           <input
+            id="email"
             type="email"
             required
+            autoComplete="email"
             placeholder="ton@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -75,6 +81,7 @@ export default function LoginPage() {
         </div>
 
         <button
+          type="button"
           onClick={handleGoogle}
           className="flex w-full items-center justify-center gap-3 rounded-xl border border-zinc-200 bg-white py-3 font-medium text-[#0D0D0D] hover:bg-zinc-50 transition-colors"
         >
@@ -88,5 +95,13 @@ export default function LoginPage() {
         </p>
       </div>
     </main>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   )
 }
