@@ -1,4 +1,4 @@
-import { pgTable, text, boolean, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { pgTable, text, boolean, timestamp, uuid, integer } from 'drizzle-orm/pg-core'
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -56,6 +56,8 @@ export const orders = pgTable('orders', {
   status: text('status').notNull().default('pending'), // 'pending' | 'processing' | 'delivered'
   cvOriginalKey: text('cv_original_key').notNull(),
   cvRewrittenKey: text('cv_rewritten_key'),
+  revisionCount: integer('revision_count').notNull().default(0),
+  revisionLimit: integer('revision_limit').notNull().default(-1), // -1 = unlimited
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })

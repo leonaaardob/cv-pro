@@ -29,8 +29,8 @@ export async function POST(
 
     if (action === 'upload-rewritten' && file) {
       const ext = file.name.split('.').pop() ?? 'pdf'
-      const uploadUuid = order.cvOriginalKey.split('/')[2] // reuse same uuid folder
-      const key = buildCvKey(order.userId, uploadUuid, 'rewritten', ext)
+      const uploadUuid = order.cvOriginalKey.split('/')[1] // cvs/{uploadUuid}/original.ext
+      const key = buildCvKey(uploadUuid, 'rewritten', ext)
       const buffer = Buffer.from(await file.arrayBuffer())
       await uploadToR2(key, buffer, file.type)
 

@@ -11,12 +11,11 @@ export const r2 = new S3Client({
 })
 
 export function buildCvKey(
-  userId: string,
   uploadUuid: string,
   type: 'original' | 'rewritten',
   ext: string,
 ): string {
-  return `cvs/${userId}/${uploadUuid}/${type}.${ext.toLowerCase()}`
+  return `cvs/${uploadUuid}/${type}.${ext.toLowerCase()}`
 }
 
 export async function uploadToR2(key: string, body: Buffer, contentType: string): Promise<void> {

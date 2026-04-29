@@ -5,7 +5,7 @@ import { CvDeliveredEmail } from '@/emails/cv-delivered'
 import { AccountDeletedEmail } from '@/emails/account-deleted'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
-const FROM = 'cvpro@lbframe.com'
+const FROM = 'CV Pro <noreply@cvpro.lbframe.com>'
 
 export async function sendMagicLinkEmail({ to, magicLinkUrl }: { to: string; magicLinkUrl: string }) {
   await resend.emails.send({
@@ -20,16 +20,18 @@ export async function sendOrderConfirmationEmail({
   to,
   productName,
   orderId,
+  magicLinkUrl,
 }: {
   to: string
   productName: string
   orderId: string
+  magicLinkUrl: string
 }) {
   await resend.emails.send({
     from: FROM,
     to,
     subject: 'Commande confirmée — CV Pro',
-    react: OrderConfirmationEmail({ productName, orderId }),
+    react: OrderConfirmationEmail({ productName, orderId, magicLinkUrl }),
   })
 }
 

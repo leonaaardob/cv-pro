@@ -1,28 +1,22 @@
-// app/api/checkout/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
-import { auth } from '@/lib/auth'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 export async function POST(request: NextRequest) {
-  const session = await auth.api.getSession({ headers: request.headers })
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  const { priceId, cvOriginalKey, uploadUuid } = await request.json() as {
+  const { email, priceId, cvOriginalKey, uploadUuid } = await request.json() as {
+    email: string
     priceId: string
     cvOriginalKey: string
     uploadUuid: string
   }
 
-  if (!priceId || !cvOriginalKey || !uploadUuid) {
+  if (!email || !priceId || !cvOriginalKey || !uploadUuid) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
-  // Retrieve product info from Stripe price
   const price = await stripe.prices.retrieve(priceId, { expand: ['product'] })
   const product = price.product as Stripe.Product
-  const productName = product.name
 
   const appUrl = process.env.BETTER_AUTH_URL ?? 'https://cvpro.lbframe.com'
 
@@ -30,13 +24,13 @@ export async function POST(request: NextRequest) {
     mode: 'payment',
     line_items: [{ price: priceId, quantity: 1 }],
     metadata: {
-      userId: session.user.id,
+      email,
       cvOriginalKey,
       productId: product.id,
-      productName,
+      productName: product.name,
     },
-    customer_email: session.user.email,
-    success_url: `${appUrl}/dashboard?success=1`,
+    customer_email: email,
+    success_url: `${appUrl}/succes`,
     cancel_url: `${appUrl}/order?cancelled=1`,
   })
 

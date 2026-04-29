@@ -1,13 +1,15 @@
 import { Html, Head, Body, Container, Heading, Text, Button, Hr } from '@react-email/components'
 
-export function OrderConfirmationEmail({
-  productName,
+const APP_URL = process.env.BETTER_AUTH_URL ?? 'https://cvpro.lbframe.com'
+
+export function RevisionRequestEmail({
+  customerEmail,
   orderId,
-  magicLinkUrl,
+  productName,
 }: {
-  productName: string
+  customerEmail: string
   orderId: string
-  magicLinkUrl: string
+  productName: string
 }) {
   return (
     <Html lang="fr">
@@ -15,26 +17,23 @@ export function OrderConfirmationEmail({
       <Body style={{ backgroundColor: '#F7F7F4', fontFamily: 'sans-serif' }}>
         <Container style={{ maxWidth: '480px', margin: '40px auto', backgroundColor: '#ffffff', borderRadius: '12px', padding: '40px' }}>
           <Heading style={{ fontSize: '24px', color: '#0D0D0D' }}>
-            Commande confirmée !
+            Demande de révision
           </Heading>
           <Text style={{ color: '#6b7280', fontSize: '16px' }}>
-            Merci pour ta commande <strong>{productName}</strong>. Ton CV sera réécrit et livré dans ta boîte mail sous 30 minutes.
+            Le client <strong>{customerEmail}</strong> a demandé une révision pour la commande suivante :
           </Text>
-          <Text style={{ color: '#6b7280', fontSize: '14px', marginTop: '0' }}>
-            Numéro de commande : <code style={{ color: '#0D0D0D' }}>{orderId}</code>
+          <Text style={{ color: '#0D0D0D', fontSize: '16px', fontWeight: '600' }}>
+            {productName}
           </Text>
           <Button
-            href={magicLinkUrl}
+            href={`${APP_URL}/admin/orders/${orderId}`}
             style={{ backgroundColor: '#1A3CFF', color: '#ffffff', borderRadius: '8px', padding: '12px 24px', fontSize: '16px', fontWeight: '600', display: 'block', textAlign: 'center', marginTop: '24px' }}
           >
-            Accéder à mon espace →
+            Voir la commande →
           </Button>
-          <Text style={{ color: '#9ca3af', fontSize: '12px', marginTop: '16px' }}>
-            Ce lien te connecte directement — valable 7 jours.
-          </Text>
           <Hr style={{ margin: '32px 0', borderColor: '#e5e7eb' }} />
           <Text style={{ color: '#9ca3af', fontSize: '12px' }}>
-            CV Pro · Un service LB FRAME · cvpro@lbframe.com
+            CV Pro · Admin · cvpro@lbframe.com
           </Text>
         </Container>
       </Body>

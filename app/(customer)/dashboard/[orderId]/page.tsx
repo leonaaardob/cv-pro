@@ -5,6 +5,7 @@ import { eq, and } from 'drizzle-orm'
 import { headers } from 'next/headers'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
+import { RevisionButton } from '@/components/RevisionButton'
 
 export default async function OrderDetailPage({ params }: { params: Promise<{ orderId: string }> }) {
   const { orderId } = await params
@@ -45,6 +46,11 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ or
               >
                 Télécharger mon CV →
               </a>
+              <RevisionButton
+                orderId={order.id}
+                initialCount={order.revisionCount}
+                revisionLimit={order.revisionLimit}
+              />
             </>
           ) : order.status === 'processing' ? (
             <>

@@ -10,7 +10,7 @@ export async function proxy(request: NextRequest) {
 
   const isAuthed = Boolean(sessionToken)
 
-  if ((pathname.startsWith('/dashboard') || pathname.startsWith('/order')) && !isAuthed) {
+  if (pathname.startsWith('/dashboard') && !isAuthed) {
     const loginUrl = new URL('/auth/login', request.url)
     loginUrl.searchParams.set('redirect', pathname)
     return NextResponse.redirect(loginUrl)
@@ -24,5 +24,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/order/:path*', '/admin/:path*'],
+  matcher: ['/dashboard/:path*', '/admin/:path*'],
 }
