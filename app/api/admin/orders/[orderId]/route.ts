@@ -5,6 +5,7 @@ import { orders, user } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import { uploadToR2, buildCvKey } from '@/lib/r2'
 import { sendCvDeliveredEmail } from '@/lib/email'
+import { enqueueCvSequence } from '@/lib/email-queue'
 
 export async function POST(
   request: NextRequest,
@@ -48,6 +49,7 @@ export async function POST(
       const customer = await db.query.user.findFirst({ where: eq(user.id, order.userId) })
       if (customer) {
         sendCvDeliveredEmail({ to: customer.email, orderId }).catch(console.error)
+        enqueueCvSequence(customer.email, orderId).catch(console.error)
       }
     } else if (action === 'update-status') {
       const status = formData.get('status') as string
@@ -65,6 +67,7 @@ export async function POST(
         const customer = await db.query.user.findFirst({ where: eq(user.id, order.userId) })
         if (customer) {
           sendCvDeliveredEmail({ to: customer.email, orderId }).catch(console.error)
+          enqueueCvSequence(customer.email, orderId).catch(console.error)
         }
       }
     }

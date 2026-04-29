@@ -4,6 +4,7 @@ import { db } from '@/lib/db'
 import { orders, user, ebookPurchases } from '@/lib/db/schema'
 import { sendOrderConfirmationEmail, sendEbookDeliveredEmail } from '@/lib/email'
 import { generateEbookToken } from '@/lib/ebook-token'
+import { enqueueEbookSequence } from '@/lib/email-queue'
 import { eq } from 'drizzle-orm'
 import { randomUUID } from 'crypto'
 import Redis from 'ioredis'
@@ -111,6 +112,8 @@ async function handleEbookPurchase(session: Stripe.Checkout.Session) {
     to: resolvedEmail,
     downloadUrl,
   }).catch(console.error)
+
+  enqueueEbookSequence(resolvedEmail).catch(console.error)
 }
 
 export async function POST(request: NextRequest) {
