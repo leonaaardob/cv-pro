@@ -5,6 +5,14 @@ import { CvDeliveredEmail } from '@/emails/cv-delivered'
 import { AccountDeletedEmail } from '@/emails/account-deleted'
 import { RevisionRequestEmail } from '@/emails/revision-request'
 import { EbookDeliveredEmail } from '@/emails/ebook-delivered'
+import { CvActivationEmail } from '@/emails/cv-activation'
+import { CvFeedbackEmail } from '@/emails/cv-feedback'
+import { CvUpsellEbookEmail } from '@/emails/cv-upsell-ebook'
+import { EbookUpsellCv1Email } from '@/emails/ebook-upsell-cv-1'
+import { EbookTipEmail } from '@/emails/ebook-tip'
+import { EbookNurturingEmail } from '@/emails/ebook-nurturing'
+import { EbookFeedbackEmail } from '@/emails/ebook-feedback'
+import { EbookUpsellCv2Email } from '@/emails/ebook-upsell-cv-2'
 
 const FROM = 'CV Pro <noreply@cvpro.lbframe.com>'
 
@@ -99,4 +107,57 @@ export async function sendRevisionNotificationEmail({
     subject: `Révision demandée — ${productName}`,
     react: RevisionRequestEmail({ customerEmail, orderId, productName, message }),
   })
+}
+
+type SequenceParams = Record<string, string>
+
+const SEQUENCE_TEMPLATES: Record<string, {
+  subject: string
+  render: (params: SequenceParams) => React.ReactElement
+}> = {
+  'cv-activation': {
+    subject: '3 choses à faire avec ton CV réécrit',
+    render: (p) => CvActivationEmail({ orderId: p.orderId ?? '' }),
+  },
+  'cv-feedback': {
+    subject: 'Est-ce que ça se passe bien ?',
+    render: () => CvFeedbackEmail(),
+  },
+  'cv-upsell-ebook': {
+    subject: 'Tu veux aller plus loin dans ta recherche ?',
+    render: () => CvUpsellEbookEmail(),
+  },
+  'ebook-upsell-cv-1': {
+    subject: 'Tu as le guide. Il te manque peut-être une chose.',
+    render: () => EbookUpsellCv1Email(),
+  },
+  'ebook-tip': {
+    subject: 'Ce prompt a aidé 3 candidats à décrocher un entretien',
+    render: () => EbookTipEmail(),
+  },
+  'ebook-nurturing': {
+    subject: 'Est-ce que tu as eu des réponses ?',
+    render: () => EbookNurturingEmail(),
+  },
+  'ebook-feedback': {
+    subject: 'Ton avis en 30 secondes',
+    render: () => EbookFeedbackEmail(),
+  },
+  'ebook-upsell-cv-2': {
+    subject: 'Ce que les candidats qui trouvent vite font différemment',
+    render: () => EbookUpsellCv2Email(),
+  },
+}
+
+export async function sendSequenceEmail(
+  to: string,
+  template: string,
+  params: SequenceParams,
+): Promise<void> {
+  const config = SEQUENCE_TEMPLATES[template]
+  if (!config) {
+    console.error('Unknown sequence email template:', template)
+    return
+  }
+  await sendEmail({ to, subject: config.subject, react: config.render(params) })
 }
