@@ -71,8 +71,19 @@ export const ebookPurchases = pgTable('ebook_purchases', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
 })
 
+export const emailQueue = pgTable('email_queue', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  to: text('to').notNull(),
+  template: text('template').notNull(),
+  params: text('params').notNull().default('{}'),
+  sendAt: timestamp('send_at').notNull(),
+  sentAt: timestamp('sent_at'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+})
+
 export type Order = typeof orders.$inferSelect
 export type OrderInsert = typeof orders.$inferInsert
 export type User = typeof user.$inferSelect
 export type EbookPurchase = typeof ebookPurchases.$inferSelect
+export type EmailQueueItem = typeof emailQueue.$inferSelect
 export type OrderStatus = 'pending' | 'processing' | 'delivered'
