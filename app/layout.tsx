@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import { PostHogProvider } from "@/components/PostHogProvider";
 import { PlausibleScript } from "@/components/PlausibleScript";
+import { GrowthbookWrapper } from "@/components/GrowthbookProvider";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 
@@ -37,7 +38,9 @@ export default function RootLayout({
     <html lang="fr" className={geist.variable}>
       <body className="antialiased">
         <PlausibleScript />
-        <PostHogProvider>{children}</PostHogProvider>
+        <GrowthbookWrapper>
+          <PostHogProvider>{children}</PostHogProvider>
+        </GrowthbookWrapper>
       </body>
     </html>
   );
