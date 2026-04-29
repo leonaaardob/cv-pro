@@ -3,7 +3,7 @@ import { isUrgentOrder } from '@/lib/admin-utils'
 
 describe('isUrgentOrder', () => {
   it('returns false for non-pending status', () => {
-    const order = { status: 'completed', createdAt: new Date(Date.now() - 60 * 60 * 1000) }
+    const order = { status: 'delivered', createdAt: new Date(Date.now() - 60 * 60 * 1000) }
     expect(isUrgentOrder(order)).toBe(false)
   })
 

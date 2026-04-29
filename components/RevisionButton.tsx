@@ -16,6 +16,7 @@ export function RevisionButton({
   const [justRequested, setJustRequested] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [message, setMessage] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
   const limitReached = revisionLimit !== -1 && count >= revisionLimit
 
@@ -34,6 +35,9 @@ export function RevisionButton({
         setShowForm(false)
         setMessage('')
         setTimeout(() => setJustRequested(false), 4000)
+      } else {
+        const body = await res.json().catch(() => ({}))
+        setError(body.error ?? 'Une erreur est survenue. Réessaie.')
       }
     } finally {
       setLoading(false)
@@ -55,7 +59,7 @@ export function RevisionButton({
 
       {!showForm && !justRequested && (
         <button
-          onClick={() => setShowForm(true)}
+          onClick={() => { setShowForm(true); setError(null) }}
           className="inline-flex items-center gap-2 rounded-xl border border-zinc-300 bg-white px-5 py-3 text-sm font-semibold text-[#0D0D0D] hover:bg-zinc-50 transition-colors"
         >
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -68,6 +72,7 @@ export function RevisionButton({
 
       {showForm && (
         <>
+          {error && <p className="text-sm text-red-500">{error}</p>}
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
@@ -85,7 +90,7 @@ export function RevisionButton({
               {loading ? 'Envoi...' : 'Confirmer →'}
             </button>
             <button
-              onClick={() => { setShowForm(false); setMessage('') }}
+              onClick={() => { setShowForm(false); setMessage(''); setError(null) }}
               className="rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-500 hover:bg-zinc-50 transition-colors"
             >
               Annuler

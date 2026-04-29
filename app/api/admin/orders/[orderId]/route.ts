@@ -54,7 +54,12 @@ export async function POST(
       if (!['pending', 'processing', 'delivered'].includes(status)) {
         return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
       }
-      await db.update(orders).set({ status, updatedAt: new Date() }).where(eq(orders.id, orderId))
+      const updateData: Record<string, unknown> = { status, updatedAt: new Date() }
+      if (status === 'delivered') {
+        updateData.revisionRequestedAt = null
+        updateData.revisionMessage = null
+      }
+      await db.update(orders).set(updateData).where(eq(orders.id, orderId))
 
       if (status === 'delivered') {
         const customer = await db.query.user.findFirst({ where: eq(user.id, order.userId) })

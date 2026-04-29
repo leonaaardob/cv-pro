@@ -26,6 +26,10 @@ export async function POST(
   const limitReached = order.revisionLimit !== -1 && order.revisionCount >= order.revisionLimit
   if (limitReached) return NextResponse.json({ error: 'Revision limit reached' }, { status: 429 })
 
+  if (order.revisionRequestedAt !== null) {
+    return NextResponse.json({ error: 'Revision already pending' }, { status: 409 })
+  }
+
   await db
     .update(orders)
     .set({

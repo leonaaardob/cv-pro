@@ -121,7 +121,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ ord
 
           <div className="rounded-2xl border border-zinc-200 bg-white p-6">
             <h2 className="font-semibold text-[#0D0D0D]">Changer le statut manuellement</h2>
-            <form action={`/api/admin/orders/${orderId}`} method="POST" className="mt-4 flex gap-3">
+            <form action={`/api/admin/orders/${orderId}`} method="POST" encType="multipart/form-data" className="mt-4 flex gap-3">
               <input type="hidden" name="action" value="update-status" />
               <select
                 name="status"
