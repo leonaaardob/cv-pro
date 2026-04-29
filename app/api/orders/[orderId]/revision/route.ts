@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { orders } from '@/lib/db/schema'
 import { and, eq, sql } from 'drizzle-orm'
+import { sendRevisionNotificationEmail } from '@/lib/email'
 
 export async function POST(
   request: NextRequest,
@@ -12,6 +13,8 @@ export async function POST(
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { orderId } = await params
+  const body = await request.json().catch(() => ({})) as { message?: string }
+  const message = typeof body.message === 'string' ? body.message.trim().slice(0, 500) || null : null
 
   const order = await db.query.orders.findFirst({
     where: and(eq(orders.id, orderId), eq(orders.userId, session.user.id)),
@@ -25,8 +28,24 @@ export async function POST(
 
   await db
     .update(orders)
-    .set({ revisionCount: sql`${orders.revisionCount} + 1`, updatedAt: new Date() })
+    .set({
+      revisionCount: sql`${orders.revisionCount} + 1`,
+      revisionRequestedAt: new Date(),
+      revisionMessage: message,
+      updatedAt: new Date(),
+    })
     .where(eq(orders.id, orderId))
+
+  const adminEmail = process.env.ADMIN_EMAIL
+  if (adminEmail) {
+    sendRevisionNotificationEmail({
+      to: adminEmail,
+      customerEmail: session.user.email,
+      orderId,
+      productName: order.productName,
+      message: message ?? undefined,
+    }).catch(console.error)
+  }
 
   return NextResponse.json({ revisionCount: order.revisionCount + 1 })
 }
