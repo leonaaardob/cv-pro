@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 :root {
   --background: #F7F7F4;
@@ -58,4 +59,62 @@ body {
 .prose-article strong {
   color: #0D0D0D;
   font-weight: 700;
+}
+
+/* Guide prose — style Medium */
+.prose-guide h2 {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: #0D0D0D;
+  margin: 3rem 0 1rem;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.prose-guide h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0D0D0D;
+  margin: 2rem 0 0.75rem;
+  line-height: 1.35;
+}
+
+.prose-guide p {
+  font-size: 1.125rem;
+  line-height: 1.85;
+  color: #1a1a1a;
+  margin: 0 0 1.5rem;
+}
+
+.prose-guide ul, .prose-guide ol {
+  margin: 0 0 1.5rem;
+  padding-left: 1.75rem;
+}
+
+.prose-guide li {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+}
+
+.prose-guide blockquote {
+  border-left: 4px solid #1A3CFF;
+  padding: 1rem 1.5rem;
+  background: #f8f9ff;
+  margin: 2rem 0;
+  color: #1a1a1a;
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.prose-guide strong {
+  color: #0D0D0D;
+  font-weight: 700;
+}
+
+.prose-guide hr {
+  border: none;
+  border-top: 1px solid #e4e4e7;
+  margin: 2.5rem 0;
 }

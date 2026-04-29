@@ -19,6 +19,16 @@ const STATUS_COLOR: Record<string, string> = {
   delivered: 'bg-green-100 text-green-700',
 }
 
+function getOrderLabel(order: { status: string; revisionRequestedAt: Date | null }) {
+  if (order.status === 'pending' && order.revisionRequestedAt) return 'Révision'
+  return STATUS_LABEL[order.status] ?? order.status
+}
+
+function getOrderColor(order: { status: string; revisionRequestedAt: Date | null }) {
+  if (order.status === 'pending' && order.revisionRequestedAt) return 'bg-purple-100 text-purple-700'
+  return STATUS_COLOR[order.status] ?? 'bg-zinc-100 text-zinc-700'
+}
+
 export default async function DashboardPage() {
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect('/auth/login')
@@ -65,8 +75,8 @@ export default async function DashboardPage() {
                       })}
                     </p>
                   </div>
-                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${STATUS_COLOR[order.status]}`}>
-                    {STATUS_LABEL[order.status]}
+                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${getOrderColor(order)}`}>
+                    {getOrderLabel(order)}
                   </span>
                 </div>
               </Link>

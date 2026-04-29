@@ -52,6 +52,21 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ or
                 revisionLimit={order.revisionLimit}
               />
             </>
+          ) : order.status === 'pending' && order.revisionRequestedAt ? (
+            <>
+              <p className="text-lg font-semibold text-purple-700">Révision en cours</p>
+              <p className="mt-2 text-zinc-500">
+                Ta demande de révision a bien été prise en compte. Tu recevras un email dès que ton CV révisé sera prêt.
+              </p>
+              {downloadUrl && (
+                <a
+                  href={downloadUrl}
+                  className="mt-6 inline-flex items-center gap-2 rounded-xl border border-zinc-200 px-6 py-3 text-sm font-semibold text-[#0D0D0D] hover:bg-zinc-50 transition-colors"
+                >
+                  Télécharger la version actuelle →
+                </a>
+              )}
+            </>
           ) : order.status === 'processing' ? (
             <>
               <p className="text-lg font-semibold text-[#0D0D0D]">Ton CV est en cours de réécriture</p>

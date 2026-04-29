@@ -33,6 +33,7 @@ export async function POST(
   await db
     .update(orders)
     .set({
+      status: 'pending',
       revisionCount: sql`${orders.revisionCount} + 1`,
       revisionRequestedAt: new Date(),
       revisionMessage: message,

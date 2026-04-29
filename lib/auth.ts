@@ -21,12 +21,18 @@ export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL!,
   secret: process.env.BETTER_AUTH_SECRET!,
   secondaryStorage: {
-    get: async (key) => redis.get(key),
-    set: async (key, value, ttl) => {
-      if (ttl) await redis.setex(key, ttl, value)
-      else await redis.set(key, value)
+    get: async (key) => {
+      try { return await redis.get(key) } catch { return null }
     },
-    delete: async (key) => { await redis.del(key) },
+    set: async (key, value, ttl) => {
+      try {
+        if (ttl) await redis.setex(key, ttl, value)
+        else await redis.set(key, value)
+      } catch {}
+    },
+    delete: async (key) => {
+      try { await redis.del(key) } catch {}
+    },
   },
   user: {
     additionalFields: {
