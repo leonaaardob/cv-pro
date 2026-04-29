@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
-import { PostHogProvider } from "@/components/PostHogProvider";
 import { PlausibleScript } from "@/components/PlausibleScript";
 import { GrowthbookWrapper } from "@/components/GrowthbookProvider";
 
@@ -39,7 +38,7 @@ export default function RootLayout({
       <body className="antialiased">
         <PlausibleScript />
         <GrowthbookWrapper>
-          <PostHogProvider>{children}</PostHogProvider>
+          {children}
         </GrowthbookWrapper>
       </body>
     </html>

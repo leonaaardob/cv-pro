@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { trackEvent } from '@/components/PlausibleScript'
 
 interface CTAButtonProps {
   dark?: boolean
@@ -13,9 +14,7 @@ export function CTAButton({ dark = false, location }: CTAButtonProps) {
   return (
     <button
       onClick={() => {
-        if (typeof window !== 'undefined' && (window as any).posthog) {
-          (window as any).posthog.capture('cta_clicked', { location })
-        }
+        trackEvent('CTA Clicked', { location })
         router.push('/order')
       }}
       className={

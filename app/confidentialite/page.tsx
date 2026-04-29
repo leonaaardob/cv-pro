@@ -32,7 +32,7 @@ export default function Confidentialite() {
               Données collectées
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-zinc-600">
-              Email, CV (livraison uniquement), analytics anonymisés PostHog.
+              Email, CV (livraison uniquement), analytics anonymisés Plausible.
             </p>
           </div>
           <div>
@@ -56,7 +56,7 @@ export default function Confidentialite() {
               Sous-traitants
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-zinc-600">
-              Stripe (paiement), PostHog EU (analytics), Anthropic (IA, sans réentraînement).
+              Stripe (paiement), Plausible (analytics), Anthropic (IA, sans réentraînement).
             </p>
           </div>
           <div>
@@ -86,7 +86,7 @@ export default function Confidentialite() {
               Cookies
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-zinc-600">
-              Analytics anonymisés uniquement (PostHog), dispensés de consentement (recommandations CNIL).
+              Analytics anonymisés uniquement (Plausible), dispensés de consentement (recommandations CNIL).
             </p>
           </div>
         </div>
