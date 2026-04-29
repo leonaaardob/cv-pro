@@ -19,12 +19,31 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ ord
     .limit(1)
 
   if (!result[0]) notFound()
-  const { order, userEmail, userName } = result[0]
+  let { order, userEmail, userName } = result[0]
+
+  if (order.status === 'pending') {
+    await db
+      .update(orders)
+      .set({ status: 'processing', updatedAt: new Date() })
+      .where(eq(orders.id, orderId))
+    order = { ...order, status: 'processing' }
+  }
 
   const originalDownloadUrl = `/api/files/${encodeURIComponent(order.cvOriginalKey)}`
   const rewrittenDownloadUrl = order.cvRewrittenKey
     ? `/api/files/${encodeURIComponent(order.cvRewrittenKey)}`
     : null
+
+  const STATUS_COLOR: Record<string, string> = {
+    pending: 'bg-yellow-100 text-yellow-700',
+    processing: 'bg-blue-100 text-blue-700',
+    delivered: 'bg-green-100 text-green-700',
+  }
+  const STATUS_LABEL: Record<string, string> = {
+    pending: 'En attente',
+    processing: 'En cours',
+    delivered: 'Livré',
+  }
 
   return (
     <main className="min-h-screen bg-[#F7F7F4] px-6 py-12">
@@ -33,11 +52,29 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ ord
           ← Retour
         </Link>
 
-        <h1 className="mt-6 text-2xl font-black text-[#0D0D0D]">{order.productName}</h1>
-        <p className="mt-1 text-zinc-500">{userName} · {userEmail}</p>
+        <div className="mt-6 flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-black text-[#0D0D0D]">{order.productName}</h1>
+            <p className="mt-1 text-zinc-500">{userName} · {userEmail}</p>
+          </div>
+          <span className={`rounded-full px-3 py-1 text-xs font-semibold shrink-0 ${STATUS_COLOR[order.status]}`}>
+            {STATUS_LABEL[order.status]}
+          </span>
+        </div>
 
-        <div className="mt-8 space-y-4">
-          {/* Download original CV */}
+        {order.revisionRequestedAt && (
+          <div className="mt-4 rounded-2xl border border-orange-200 bg-orange-50 px-6 py-4">
+            <p className="text-sm font-semibold text-orange-700">Révision demandée</p>
+            {order.revisionMessage && (
+              <p className="mt-1 text-sm text-orange-600">&ldquo;{order.revisionMessage}&rdquo;</p>
+            )}
+            <p className="mt-1 text-xs text-orange-400">
+              {new Date(order.revisionRequestedAt).toLocaleString('fr-FR')}
+            </p>
+          </div>
+        )}
+
+        <div className="mt-6 space-y-4">
           <div className="rounded-2xl border border-zinc-200 bg-white p-6">
             <h2 className="font-semibold text-[#0D0D0D]">CV original</h2>
             <a
@@ -48,7 +85,6 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ ord
             </a>
           </div>
 
-          {/* Upload rewritten CV + change status */}
           <div className="rounded-2xl border border-zinc-200 bg-white p-6">
             <h2 className="font-semibold text-[#0D0D0D]">CV réécrit</h2>
 
@@ -64,7 +100,9 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ ord
             <form action={`/api/admin/orders/${orderId}`} method="POST" encType="multipart/form-data" className="mt-4 space-y-4">
               <input type="hidden" name="action" value="upload-rewritten" />
               <div>
-                <label className="text-sm font-medium text-zinc-700">Upload CV réécrit</label>
+                <label className="text-sm font-medium text-zinc-700">
+                  {order.revisionRequestedAt ? 'Uploader la révision' : 'Upload CV réécrit'}
+                </label>
                 <input
                   type="file"
                   name="file"
@@ -76,14 +114,13 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ ord
                 type="submit"
                 className="rounded-xl bg-[#0D0D0D] px-5 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 transition-colors"
               >
-                Uploader et livrer →
+                {order.revisionRequestedAt ? 'Uploader et livrer la révision →' : 'Uploader et livrer →'}
               </button>
             </form>
           </div>
 
-          {/* Status selector */}
           <div className="rounded-2xl border border-zinc-200 bg-white p-6">
-            <h2 className="font-semibold text-[#0D0D0D]">Statut actuel : <span className="text-[#1A3CFF]">{order.status}</span></h2>
+            <h2 className="font-semibold text-[#0D0D0D]">Changer le statut manuellement</h2>
             <form action={`/api/admin/orders/${orderId}`} method="POST" className="mt-4 flex gap-3">
               <input type="hidden" name="action" value="update-status" />
               <select
