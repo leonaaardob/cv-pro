@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { db } from '@/lib/db'
-import { orders, user } from '@/lib/db/schema'
-import { sendOrderConfirmationEmail } from '@/lib/email'
+import { orders, user, ebookPurchases } from '@/lib/db/schema'
+import { sendOrderConfirmationEmail, sendEbookDeliveredEmail } from '@/lib/email'
+import { generateEbookToken } from '@/lib/ebook-token'
 import { eq } from 'drizzle-orm'
 import { randomUUID } from 'crypto'
 import Redis from 'ioredis'
@@ -48,6 +49,70 @@ async function createMagicLinkUrl(email: string): Promise<string> {
   return `${appUrl}/api/auth/magic-link/verify?token=${token}&callbackURL=%2Fdashboard`
 }
 
+async function handleCvPurchase(session: Stripe.Checkout.Session) {
+  const existing = await db.query.orders.findFirst({
+    where: eq(orders.stripeSessionId, session.id),
+  })
+  if (existing) return
+
+  const { email, cvOriginalKey, productId, productName } = session.metadata ?? {}
+  const resolvedEmail = email ?? session.customer_email
+
+  if (!resolvedEmail || !cvOriginalKey || !productId || !productName) {
+    console.error('CV purchase: missing metadata', session.id)
+    return
+  }
+
+  const userId = await findOrCreateUser(resolvedEmail)
+
+  const [order] = await db.insert(orders).values({
+    userId,
+    stripeSessionId: session.id,
+    stripeProductId: productId,
+    productName,
+    status: 'pending',
+    cvOriginalKey,
+    cvRewrittenKey: null,
+  }).returning()
+
+  const magicLinkUrl = await createMagicLinkUrl(resolvedEmail)
+
+  sendOrderConfirmationEmail({
+    to: resolvedEmail,
+    productName,
+    orderId: order.id,
+    magicLinkUrl,
+  }).catch(console.error)
+}
+
+async function handleEbookPurchase(session: Stripe.Checkout.Session) {
+  const existing = await db.query.ebookPurchases.findFirst({
+    where: eq(ebookPurchases.stripeSessionId, session.id),
+  })
+  if (existing) return
+
+  const { email, productName } = session.metadata ?? {}
+  const resolvedEmail = email ?? session.customer_email
+
+  if (!resolvedEmail) {
+    console.error('Ebook purchase: missing email', session.id)
+    return
+  }
+
+  await db.insert(ebookPurchases).values({
+    email: resolvedEmail,
+    stripeSessionId: session.id,
+  })
+
+  const token = generateEbookToken(resolvedEmail)
+  const downloadUrl = `${process.env.EBOOK_DOWNLOAD_BASE_URL ?? 'https://ebooks.lbframe.com/download'}?token=${token}`
+
+  sendEbookDeliveredEmail({
+    to: resolvedEmail,
+    downloadUrl,
+  }).catch(console.error)
+}
+
 export async function POST(request: NextRequest) {
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')!
@@ -61,40 +126,13 @@ export async function POST(request: NextRequest) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
+    const productType = session.metadata?.productType
 
-    const existing = await db.query.orders.findFirst({
-      where: eq(orders.stripeSessionId, session.id),
-    })
-    if (existing) return NextResponse.json({ received: true })
-
-    const { email, cvOriginalKey, productId, productName } = session.metadata ?? {}
-    const resolvedEmail = email ?? session.customer_email
-
-    if (!resolvedEmail || !cvOriginalKey || !productId || !productName) {
-      console.error('Missing metadata in Stripe session', session.id)
-      return NextResponse.json({ error: 'Missing metadata' }, { status: 400 })
+    if (productType === 'ebook') {
+      await handleEbookPurchase(session)
+    } else {
+      await handleCvPurchase(session)
     }
-
-    const userId = await findOrCreateUser(resolvedEmail)
-
-    const [order] = await db.insert(orders).values({
-      userId,
-      stripeSessionId: session.id,
-      stripeProductId: productId,
-      productName,
-      status: 'pending',
-      cvOriginalKey,
-      cvRewrittenKey: null,
-    }).returning()
-
-    const magicLinkUrl = await createMagicLinkUrl(resolvedEmail)
-
-    sendOrderConfirmationEmail({
-      to: resolvedEmail,
-      productName,
-      orderId: order.id,
-      magicLinkUrl,
-    }).catch(console.error)
   }
 
   return NextResponse.json({ received: true })
