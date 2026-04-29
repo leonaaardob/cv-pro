@@ -64,7 +64,15 @@ export const orders = pgTable('orders', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
 
+export const ebookPurchases = pgTable('ebook_purchases', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  email: text('email').notNull(),
+  stripeSessionId: text('stripe_session_id').notNull().unique(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+})
+
 export type Order = typeof orders.$inferSelect
 export type OrderInsert = typeof orders.$inferInsert
 export type User = typeof user.$inferSelect
+export type EbookPurchase = typeof ebookPurchases.$inferSelect
 export type OrderStatus = 'pending' | 'processing' | 'delivered'
