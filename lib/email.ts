@@ -3,6 +3,7 @@ import { MagicLinkEmail } from '@/emails/magic-link'
 import { OrderConfirmationEmail } from '@/emails/order-confirmation'
 import { CvDeliveredEmail } from '@/emails/cv-delivered'
 import { AccountDeletedEmail } from '@/emails/account-deleted'
+import { RevisionRequestEmail } from '@/emails/revision-request'
 
 const FROM = 'CV Pro <noreply@cvpro.lbframe.com>'
 
@@ -62,5 +63,25 @@ export async function sendAccountDeletedEmail({ to }: { to: string }) {
     to,
     subject: 'Ton compte CV Pro a été supprimé',
     react: AccountDeletedEmail(),
+  })
+}
+
+export async function sendRevisionNotificationEmail({
+  to,
+  customerEmail,
+  orderId,
+  productName,
+  message,
+}: {
+  to: string
+  customerEmail: string
+  orderId: string
+  productName: string
+  message?: string
+}) {
+  await sendEmail({
+    to,
+    subject: `Révision demandée — ${productName}`,
+    react: RevisionRequestEmail({ customerEmail, orderId, productName, message }),
   })
 }
