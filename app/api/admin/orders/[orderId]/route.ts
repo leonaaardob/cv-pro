@@ -29,17 +29,22 @@ export async function POST(
 
     if (action === 'upload-rewritten' && file) {
       const ext = file.name.split('.').pop() ?? 'pdf'
-      const uploadUuid = order.cvOriginalKey.split('/')[1] // cvs/{uploadUuid}/original.ext
+      const uploadUuid = order.cvOriginalKey.split('/')[1]
       const key = buildCvKey(uploadUuid, 'rewritten', ext)
       const buffer = Buffer.from(await file.arrayBuffer())
       await uploadToR2(key, buffer, file.type)
 
       await db
         .update(orders)
-        .set({ cvRewrittenKey: key, status: 'delivered', updatedAt: new Date() })
+        .set({
+          cvRewrittenKey: key,
+          status: 'delivered',
+          revisionRequestedAt: null,
+          revisionMessage: null,
+          updatedAt: new Date(),
+        })
         .where(eq(orders.id, orderId))
 
-      // Send delivered email
       const customer = await db.query.user.findFirst({ where: eq(user.id, order.userId) })
       if (customer) {
         sendCvDeliveredEmail({ to: customer.email, orderId }).catch(console.error)
