@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function Article() {
   return (
     <div className="prose-content">
@@ -136,6 +138,16 @@ export default function Article() {
       </p>
       <p>
         Si tu veux gagner ce temps, c&apos;est exactement ce que CV Pro fait en 30 minutes — en guidant chaque étape et en générant un document prêt à envoyer.
+      </p>
+
+      <h2>Pour aller plus loin</h2>
+      <p>
+        La réécriture par IA ne sert à rien si le résultat n'est pas compatible avec les logiciels de tri automatique. Avant d'envoyer, assure-toi que ton CV passe les filtres ATS — notre article{' '}
+        <Link href="/blog/comment-optimiser-son-cv-pour-les-ats">Comment optimiser son CV pour passer les filtres ATS</Link>{' '}
+        te donne la méthode complète. Pour les détails sur l'intégration des mots-clés, consulte aussi notre guide{' '}
+        <Link href="/bible-agent-ia-cv/mots-cles-cv">Les mots-clés qui font passer un CV</Link>{' '}
+        et{' '}
+        <Link href="/bible-agent-ia-cv/quantifier-resultats-cv">Comment quantifier ses résultats sur un CV</Link>.
       </p>
 
       <h2>Conclusion</h2>

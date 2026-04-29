@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function Article() {
   return (
     <div className="prose-content">
@@ -99,6 +101,17 @@ export default function Article() {
       </p>
       <p>
         La différence n&apos;est pas stylistique — c&apos;est une question de contenu. La deuxième version dit quelque chose de précis sur une personne précise, pour un poste précis.
+      </p>
+
+      <h2>Pour aller plus loin</h2>
+      <p>
+        La lettre de motivation accompagne toujours un CV — autant que les deux soient au même niveau. Notre article{' '}
+        <Link href="/blog/reecrire-son-cv-avec-ia">Réécrire son CV avec l'IA</Link>{' '}
+        te donne la même approche appliquée au CV. Pour les spécificités des lettres selon ta situation, notre bible propose des guides dédiés :{' '}
+        <Link href="/bible-agent-ia-cv/lettre-motivation-reconversion">lettre pour une reconversion</Link>,{' '}
+        <Link href="/bible-agent-ia-cv/pieges-chatgpt-lettre">les pièges de ChatGPT pour les lettres</Link>,{' '}
+        et{' '}
+        <Link href="/bible-agent-ia-cv/eviter-formules-creuses">supprimer les formules creuses</Link>.
       </p>
 
       <h2>Conclusion</h2>

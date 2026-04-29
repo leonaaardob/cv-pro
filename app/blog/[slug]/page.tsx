@@ -19,6 +19,13 @@ export async function generateMetadata({
     title: `${article.title} | CV Pro`,
     description: article.description,
     alternates: { canonical: `https://cvpro.lbframe.com/blog/${slug}` },
+    openGraph: {
+      title: article.title,
+      description: article.description,
+      type: 'article',
+      url: `https://cvpro.lbframe.com/blog/${slug}`,
+      publishedTime: article.date,
+    },
   }
 }
 
@@ -39,8 +46,22 @@ export default async function ArticlePage({
     notFound()
   }
 
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: meta.title,
+    description: meta.description,
+    datePublished: meta.date,
+    dateModified: meta.date,
+    author: { '@type': 'Organization', name: 'CV Pro', url: 'https://cvpro.lbframe.com' },
+    publisher: { '@type': 'Organization', name: 'CV Pro', url: 'https://cvpro.lbframe.com' },
+    url: `https://cvpro.lbframe.com/blog/${slug}`,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://cvpro.lbframe.com/blog/${slug}` },
+  }
+
   return (
     <main className="min-h-screen bg-[#F7F7F4] px-6 py-16">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <div className="mx-auto max-w-2xl">
         <Link
           href="/blog"
@@ -63,7 +84,7 @@ export default async function ArticlePage({
           <p className="mt-4 text-lg leading-relaxed text-zinc-500">{meta.description}</p>
         </div>
 
-        <div className="mt-10 rounded-2xl border border-zinc-200 bg-white px-8 py-10 prose-article">
+        <div className="mt-10 rounded-2xl border border-zinc-200 bg-white px-8 py-10 prose prose-zinc max-w-none prose-headings:tracking-tight prose-h2:text-[1.5rem] prose-h2:font-extrabold prose-h2:mt-10 prose-h3:text-[1.15rem] prose-h3:mt-7 prose-p:text-base prose-p:leading-[1.8] prose-p:text-zinc-700 prose-li:text-base prose-blockquote:border-l-[3px] prose-blockquote:border-[#1A3CFF] prose-blockquote:bg-blue-50 prose-blockquote:py-1 prose-blockquote:not-italic">
           <ArticleContent />
         </div>
 

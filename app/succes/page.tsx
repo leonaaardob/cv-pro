@@ -1,4 +1,7 @@
-export const metadata = { title: "Paiement confirmé — CV Pro" };
+export const metadata = {
+  title: "Paiement confirmé — CV Pro",
+  robots: { index: false, follow: false },
+};
 
 export default function SuccesPage() {
   return (

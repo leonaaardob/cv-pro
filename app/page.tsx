@@ -17,6 +17,28 @@ const jsonLd = {
   url: "https://cvpro.lbframe.com",
 };
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Ça va sonner faux, comme si ce n'est pas moi qui l'ai écrit ?",
+      acceptedAnswer: { "@type": "Answer", text: "On réécrit avec tes mots, tes expériences, tes chiffres. On ne fabrique rien. On restructure ce que tu as déjà — pour que ce soit toi, en mieux." },
+    },
+    {
+      "@type": "Question",
+      name: "12€ pour 30 minutes de travail, c'est vraiment sérieux ?",
+      acceptedAnswer: { "@type": "Answer", text: "Oui. Le tarif est bas parce que le process est précis et rodé. Ce n'est pas expédié — c'est efficace. Et franchement : un entretien de plus, c'est combien pour toi ?" },
+    },
+    {
+      "@type": "Question",
+      name: "Et si le résultat ne me plaît pas ?",
+      acceptedAnswer: { "@type": "Answer", text: "On retravaille jusqu'à ce que tu sois satisfait. Zéro justification à donner, zéro euro de plus à payer. C'est dans les règles du jeu." },
+    },
+  ],
+};
+
 const heroTitleLine1 = ["Pendant", "que", "tu", "envoies", "ton", "CV,"];
 const heroTitleLine2 = ["un", "autre", "candidate", "mieux", "que", "toi."];
 
@@ -99,6 +121,7 @@ export default function Home() {
   return (
     <main className="w-full max-w-full overflow-x-hidden bg-[#F7F7F4] font-[family-name:var(--font-geist)] text-[#0D0D0D]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       {/* FLOATING NAV */}
       <nav className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-32px)] max-w-6xl -translate-x-1/2 items-center justify-between rounded-full border border-white/10 bg-[#0D0D0D]/70 px-5 py-3 text-white backdrop-blur-xl">
@@ -304,22 +327,45 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer className="bg-[#0D0D0D] px-6 py-12 text-sm text-zinc-500">
-        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
-          <div>
-            <span className="font-semibold text-zinc-300">CV Pro</span>
-            <span className="mt-1 block text-xs text-zinc-600">Un service LB FRAME</span>
-            <span className="mt-1 block text-xs text-zinc-700">© 2026 CV Pro · LB FRAME</span>
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-8 grid grid-cols-1 gap-6 border-b border-white/[0.06] pb-8 sm:grid-cols-3">
+            <div>
+              <span className="block text-xs font-bold uppercase tracking-widest text-zinc-600">Ressources gratuites</span>
+              <Link href="/blog" className="mt-3 block text-zinc-400 hover:text-white transition-colors duration-200">
+                Blog — conseils CV et emploi
+              </Link>
+              <Link href="/bible-agent-ia-cv" className="mt-2 block text-zinc-400 hover:text-white transition-colors duration-200">
+                La Bible — 100 guides recherche d&apos;emploi
+              </Link>
+            </div>
+            <div>
+              <span className="block text-xs font-bold uppercase tracking-widest text-zinc-600">Nos services</span>
+              <Link href="/order" className="mt-3 block text-zinc-400 hover:text-white transition-colors duration-200">
+                CV Pro — 12€
+              </Link>
+              <Link href="/agent-ia-emploi" className="mt-2 block text-zinc-400 hover:text-white transition-colors duration-200">
+                Agent IA Emploi — 9€
+              </Link>
+            </div>
+            <div>
+              <span className="block text-xs font-bold uppercase tracking-widest text-zinc-600">Légal</span>
+              <Link href="/mentions-legales" className="mt-3 block hover:text-white transition-colors duration-200">
+                Mentions légales
+              </Link>
+              <Link href="/cgv" className="mt-2 block hover:text-white transition-colors duration-200">
+                CGV
+              </Link>
+              <Link href="/confidentialite" className="mt-2 block hover:text-white transition-colors duration-200">
+                Confidentialité
+              </Link>
+            </div>
           </div>
-          <div className="flex gap-6">
-            <Link href="/mentions-legales" className="hover:text-white transition-colors duration-200">
-              Mentions légales
-            </Link>
-            <Link href="/cgv" className="hover:text-white transition-colors duration-200">
-              CGV
-            </Link>
-            <Link href="/confidentialite" className="hover:text-white transition-colors duration-200">
-              Confidentialité
-            </Link>
+          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <div>
+              <span className="font-semibold text-zinc-300">CV Pro</span>
+              <span className="ml-2 text-xs text-zinc-600">Un service LB FRAME</span>
+            </div>
+            <span className="text-xs text-zinc-700">© 2026 CV Pro · LB FRAME</span>
           </div>
         </div>
       </footer>

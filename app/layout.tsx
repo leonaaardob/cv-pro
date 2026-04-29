@@ -17,13 +17,11 @@ export const metadata: Metadata = {
       "Même profil, 3x plus d'entretiens. L'IA réécrit ton CV en 30 minutes. 12€, ou remboursé.",
     type: "website",
     url: "https://cvpro.lbframe.com",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "CV Pro — 12€ · 30 min · Ou remboursé" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "CV Pro — Ton CV réécrit en 30 min pour 12€",
     description: "Même profil, 3x plus d'entretiens. 12€, ou remboursé.",
-    images: ["/og-image.png"],
   },
   alternates: { canonical: "https://cvpro.lbframe.com" },
 };
