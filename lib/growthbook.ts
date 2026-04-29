@@ -16,7 +16,7 @@ let _gb: GrowthBook<AppFeatures> | null = null
 export function getGrowthBook(): GrowthBook<AppFeatures> {
   if (_gb) return _gb
   _gb = new GrowthBook<AppFeatures>({
-    apiHost: 'https://cdn.growthbook.io',
+    apiHost: process.env.NEXT_PUBLIC_GROWTHBOOK_HOST ?? 'https://cdn.growthbook.io',
     clientKey: process.env.NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY ?? '',
     enableDevMode: process.env.NODE_ENV !== 'production',
     trackingCallback: (experiment, result) => {

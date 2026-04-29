@@ -4,13 +4,15 @@ import Script from 'next/script'
 
 export function PlausibleScript() {
   const domain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN
+  const host = process.env.NEXT_PUBLIC_PLAUSIBLE_HOST ?? 'https://plausible.io'
   if (!domain) return null
 
   return (
     <Script
       defer
       data-domain={domain}
-      src="https://plausible.io/js/script.tagged-events.js"
+      data-api={`${host}/api/event`}
+      src={`${host}/js/script.tagged-events.js`}
     />
   )
 }
