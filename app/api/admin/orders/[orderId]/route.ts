@@ -5,7 +5,6 @@ import { orders, user } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import { uploadToR2, buildCvKey } from '@/lib/r2'
 import { sendCvDeliveredEmail } from '@/lib/email'
-import { randomUUID } from 'crypto'
 
 export async function POST(
   request: NextRequest,
