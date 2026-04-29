@@ -8,10 +8,14 @@ const nextConfig: NextConfig = {
 
 export default withSentryConfig(nextConfig, {
   silent: true,
-  disableLogger: true,
   widenClientFileUpload: false,
   sourcemaps: { disable: true },
-  autoInstrumentServerFunctions: true,
-  autoInstrumentAppDirectory: true,
-  autoInstrumentMiddleware: false,
+  webpack: {
+    autoInstrumentServerFunctions: true,
+    autoInstrumentAppDirectory: true,
+    autoInstrumentMiddleware: false,
+    treeshake: {
+      removeDebugLogging: true,
+    },
+  },
 })
