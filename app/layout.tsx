@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { PostHogProvider } from "@/components/PostHogProvider";
+import { PlausibleScript } from "@/components/PlausibleScript";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 
@@ -35,6 +36,7 @@ export default function RootLayout({
   return (
     <html lang="fr" className={geist.variable}>
       <body className="antialiased">
+        <PlausibleScript />
         <PostHogProvider>{children}</PostHogProvider>
       </body>
     </html>

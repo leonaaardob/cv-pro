@@ -31,7 +31,7 @@ export function CookieBanner({ onConsent }: { onConsent: (accepted: boolean) => 
     <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-[#0D0D0D]/95 px-6 py-5 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm leading-relaxed text-zinc-400">
-          On utilise des analytics anonymisés (PostHog EU) pour améliorer le service.{" "}
+          On utilise des analytics anonymisés (Plausible) pour améliorer le service.{" "}
           <Link href="/confidentialite" className="text-zinc-300 underline hover:text-white transition-colors">
             En savoir plus
           </Link>
