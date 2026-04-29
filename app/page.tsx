@@ -104,12 +104,20 @@ export default function Home() {
       <nav className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-32px)] max-w-6xl -translate-x-1/2 items-center justify-between rounded-full border border-white/10 bg-[#0D0D0D]/70 px-5 py-3 text-white backdrop-blur-xl">
         <span className="font-semibold tracking-tight">CV Pro</span>
         <span className="hidden text-sm text-zinc-400 md:block">Un service LB FRAME</span>
-        <a
-          href="#prix"
-          className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#0D0D0D] hover:bg-zinc-100 transition-colors"
-        >
-          Commander
-        </a>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/dashboard"
+            className="rounded-full px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+          >
+            Mon espace
+          </Link>
+          <a
+            href="#prix"
+            className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#0D0D0D] hover:bg-zinc-100 transition-colors"
+          >
+            Commander
+          </a>
+        </div>
       </nav>
 
       {/* HERO */}
