@@ -4,6 +4,7 @@ import { OrderConfirmationEmail } from '@/emails/order-confirmation'
 import { CvDeliveredEmail } from '@/emails/cv-delivered'
 import { AccountDeletedEmail } from '@/emails/account-deleted'
 import { RevisionRequestEmail } from '@/emails/revision-request'
+import { EbookDeliveredEmail } from '@/emails/ebook-delivered'
 
 const FROM = 'CV Pro <noreply@cvpro.lbframe.com>'
 
@@ -63,6 +64,20 @@ export async function sendAccountDeletedEmail({ to }: { to: string }) {
     to,
     subject: 'Ton compte CV Pro a été supprimé',
     react: AccountDeletedEmail(),
+  })
+}
+
+export async function sendEbookDeliveredEmail({
+  to,
+  downloadUrl,
+}: {
+  to: string
+  downloadUrl: string
+}) {
+  await sendEmail({
+    to,
+    subject: "L'Agent IA Emploi — Ton guide est prêt",
+    react: EbookDeliveredEmail({ downloadUrl }),
   })
 }
 
