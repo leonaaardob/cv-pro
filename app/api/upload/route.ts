@@ -17,7 +17,13 @@ export async function POST(request: NextRequest) {
   const key = buildCvKey(uploadUuid, 'original', ext)
 
   const buffer = Buffer.from(await file.arrayBuffer())
-  await uploadToR2(key, buffer, file.type)
+
+  try {
+    await uploadToR2(key, buffer, file.type)
+  } catch (err) {
+    console.error('[upload] R2 error:', err)
+    return NextResponse.json({ error: 'Upload failed. Check R2 configuration.' }, { status: 500 })
+  }
 
   return NextResponse.json({ key, uploadUuid })
 }
