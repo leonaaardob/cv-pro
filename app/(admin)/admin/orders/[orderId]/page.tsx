@@ -5,6 +5,7 @@ import { eq } from 'drizzle-orm'
 import { headers } from 'next/headers'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
+import { uploadRewritten, updateStatus } from './actions'
 
 export default async function AdminOrderPage({ params }: { params: Promise<{ orderId: string }> }) {
   const { orderId } = await params
@@ -97,8 +98,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ ord
               </a>
             )}
 
-            <form action={`/api/admin/orders/${orderId}`} method="POST" encType="multipart/form-data" className="mt-4 space-y-4">
-              <input type="hidden" name="action" value="upload-rewritten" />
+            <form action={uploadRewritten.bind(null, orderId)} className="mt-4 space-y-4">
               <div>
                 <label className="text-sm font-medium text-zinc-700">
                   {order.revisionRequestedAt ? 'Uploader la révision' : 'Upload CV réécrit'}
@@ -121,8 +121,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ ord
 
           <div className="rounded-2xl border border-zinc-200 bg-white p-6">
             <h2 className="font-semibold text-[#0D0D0D]">Changer le statut manuellement</h2>
-            <form action={`/api/admin/orders/${orderId}`} method="POST" encType="multipart/form-data" className="mt-4 flex gap-3">
-              <input type="hidden" name="action" value="update-status" />
+            <form action={updateStatus.bind(null, orderId)} className="mt-4 flex gap-3">
               <select
                 name="status"
                 defaultValue={order.status}
