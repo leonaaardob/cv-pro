@@ -58,6 +58,8 @@ export const orders = pgTable('orders', {
   cvRewrittenKey: text('cv_rewritten_key'),
   revisionCount: integer('revision_count').notNull().default(0),
   revisionLimit: integer('revision_limit').notNull().default(-1), // -1 = unlimited
+  revisionRequestedAt: timestamp('revision_requested_at'),
+  revisionMessage: text('revision_message'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
