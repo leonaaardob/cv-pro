@@ -1,33 +1,31 @@
-"use client";
-import { usePostHog } from "posthog-js/react";
+'use client'
 
-type Props = {
-  children?: React.ReactNode;
-  dark?: boolean;
-  location?: "hero" | "bottom" | "success";
-  href?: string;
-};
+import { useRouter } from 'next/navigation'
 
-export function CTAButton({ children, dark, location = "hero", href }: Props) {
-  const posthog = usePostHog();
-  const link = href ?? process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? "#";
+interface CTAButtonProps {
+  dark?: boolean
+  location: string
+}
 
-  function handleClick() {
-    posthog?.capture("cta_clicked", { location });
-  }
+export function CTAButton({ dark = false, location }: CTAButtonProps) {
+  const router = useRouter()
 
   return (
-    <a
-      href={link}
-      onClick={handleClick}
-      className={[
-        "inline-flex items-center justify-center rounded-full px-8 py-4 text-lg font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.97]",
+    <button
+      onClick={() => {
+        if (typeof window !== 'undefined' && (window as any).posthog) {
+          (window as any).posthog.capture('cta_clicked', { location })
+        }
+        router.push('/order')
+      }}
+      className={
         dark
-          ? "bg-[#0D0D0D] text-white hover:bg-zinc-800"
-          : "bg-[#1A3CFF] text-white hover:bg-[#0D30CC]",
-      ].join(" ")}
+          ? 'inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-8 py-4 text-lg font-bold text-white backdrop-blur-sm hover:bg-white/20 transition-colors'
+          : 'inline-flex items-center gap-2 rounded-full bg-[#1A3CFF] px-8 py-4 text-lg font-bold text-white hover:bg-blue-700 transition-colors'
+      }
     >
-      {children ?? "Refaire mon CV maintenant →"}
-    </a>
-  );
+      Commander — 12€
+      <span aria-hidden>→</span>
+    </button>
+  )
 }
